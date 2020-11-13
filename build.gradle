@@ -22,4 +22,4 @@ javafx {
     version = '11.0.2'
 }
 
-mainClassName = 'com.kodilla.battleshipGame.Game'
+mainClassName = 'com.kodilla.battleshipGame.Game.Game'

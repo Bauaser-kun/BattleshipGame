@@ -11,7 +11,6 @@ public class Battleship {
             this.size = size;
         }
 
-
         public int getSize() {
             return size;
         }
