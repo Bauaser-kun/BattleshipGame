@@ -19,9 +19,9 @@ public class Board extends Parent {
 
     public Board(EventHandler<? super MouseEvent> handler, boolean playerBoard) {
         this.playerBoard = playerBoard;
-        for (int i = 0; i < rowsNumber; i++) {
+        for (int y = 0; y < rowsNumber; y++) {
             HBox row = new HBox();
-            for (int j = 0; j < columnsNumber; j++) {
+            for (int x = 0; x < columnsNumber; x++) {
                 Cell cell = new Cell();
                 cell.setOnMouseClicked(handler);
                 row.getChildren().add(cell);
