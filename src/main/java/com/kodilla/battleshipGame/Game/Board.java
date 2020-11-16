@@ -1,19 +1,23 @@
 package com.kodilla.battleshipGame.Game;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.scene.Parent;
-import javafx.scene.control.Cell;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Board extends Parent {
     private final int rowsNumber = 10;
     private final int columnsNumber = 10;
 
-    private int shipCount;
+    public int shipCount;
     private boolean playerBoard;
     private VBox rows = new VBox();
 
@@ -36,18 +40,112 @@ public class Board extends Parent {
         return (Cell)((HBox)rows.getChildren().get(y)).getChildren().get(x);
     }
 
+    public boolean setShip (Battleship ship, Cell firstCell) {
+        int shipSize = ship.getShipSize();
+        int x = (int)firstCell.getColumns();
+        int y = (int)firstCell.getRows();
+
+        if (!canSetShip(ship, firstCell)) {
+            return false;
+        }
+
+    if (ship.vertical) {
+        for (int i = y; i < y + shipSize; i++) {
+            Cell occupied = getCell(x, i);
+            occupied.ship = ship;
+        }
+    } else {
+        for (int i = x; i < x + shipSize; x++) {
+            Cell occupied = getCell(i, y);
+            occupied.ship = ship;
+        }
+    }
+return true;
+    }
+
+    public boolean canSetShip(Battleship ship, Cell firstCell) {
+        int shipSize = ship.getShipSize();
+
+        for (int i = 0; i < shipSize; i++) {
+            if (!isValidCoordinate(firstCell.getColumns() + i, firstCell.getRows() + i)) {
+                return false;
+            }
+        }
+
+            for  (int i = 0; i < shipSize; i++) {
+                if (ship.isVertical()) {
+                    Cell currentCell = getCell(firstCell.getColumns(), firstCell.getRows() + i);
+                    if (currentCell.ship != null) {
+                        return false;
+                    }
+                } else {
+                    Cell currentCell = getCell((firstCell.getColumns() + i), firstCell.getRows());
+                    if (currentCell.ship != null) {
+                        return false;
+                    }
+                }
+            }
+
+            for (Cell neighbor : getNeighbors(firstCell.getColumns(), firstCell.getRows())) {
+                if (neighbor.ship != null) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private Cell[] getNeighbors (int column, int row) {
+            Point2D[] points = new Point2D[] {
+                    new Point2D(column - 1, row),
+                    new Point2D(column + 1, row),
+                    new Point2D(column, row - 1),
+                    new Point2D(column, row + 1)
+            };
+
+            List<Cell> neighbors = new ArrayList<Cell>();
+
+            for (Point2D p : points) {
+                if (isValidPoint(p)) {
+                    neighbors.add(getCell((int)p.getX(), (int)p.getY()));
+                }
+            }
+            return neighbors.toArray(new Cell[0]);
+        }
+
+    private boolean isValidPoint(Point2D point) {
+        return isValidCoordinate(point.getX(), point.getY());
+    }
+
+    private boolean isValidCoordinate(double x, double y){
+        return x >= 0 && x < columnsNumber && y >= 0 && y < rowsNumber;
+    }
+
     public class Cell extends Rectangle {
-        public int x;
-        public int y;
+        public int columns;
+        public int rows;
         public Battleship ship;
         private boolean wasAimed;
         private Board board;
         private boolean isEmpty;
 
-        public Cell(int x, int y, Board board) {
+
+        public int getColumns() {
+            return columns;
+        }
+
+
+        public int getRows() {
+            return rows;
+        }
+
+        public Battleship getShip() {
+            return ship;
+        }
+
+        public Cell(int columns, int rows, Board board) {
             super(20, 20);
-            this.x = x;
-            this.y = y;
+            this.columns = columns;
+            this.rows = rows;
             this.board = board;
             setFill(Color.AQUAMARINE);
             setStroke(Color.GRAY);
@@ -55,10 +153,6 @@ public class Board extends Parent {
 
         public boolean isWasAimed() {
             return wasAimed;
-        }
-
-        public boolean isEmpty() {
-            return isEmpty;
         }
 
         public boolean shoot() {

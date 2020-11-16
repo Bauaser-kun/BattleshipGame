@@ -1,6 +1,7 @@
 package com.kodilla.battleshipGame.Game;
 
 public class Battleship {
+
     enum Ship {
         ONE_MAST_SHIP(ONE_MAST_SHIP_SIZE), TWO_MAST_SHIP(TWO_MAST_SHIP_SIZE),
         THREE_MAST_SHIP(THREE_MAST_SHIP_SIZE), FOUR_MAST_SHIP(FOUR_MAST_SHIP_SIZE);
@@ -31,12 +32,14 @@ public class Battleship {
     private int shipSize;
     private int hitpoints;
     private String shipName;
+    public boolean vertical = true;
 
 
     public Battleship(Ship ship) {
         this.shipSize = ship.getSize();
         this.hitpoints = ship.getSize();
         this.shipName = ship.name();
+        this.vertical = vertical;
     }
 
     public int getShipSize() {
@@ -49,6 +52,10 @@ public class Battleship {
 
     public String getShipName() {
         return shipName;
+    }
+
+    public boolean isVertical() {
+        return vertical;
     }
 
     void wasShoot() {
