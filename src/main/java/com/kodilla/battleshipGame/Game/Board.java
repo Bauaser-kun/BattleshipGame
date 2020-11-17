@@ -73,7 +73,7 @@ return true;
         do {
             int row = random.nextInt(rowsNumber);
             int column = random.nextInt(columnsNumber);
-            Cell first = new Cell(row, column);
+            Cell first = new Cell(row, column, this);
 
             if (random.nextBoolean()) {
                 randomlyPlacedShip.rotate();
