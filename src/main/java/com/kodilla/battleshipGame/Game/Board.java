@@ -9,9 +9,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Board extends Parent {
     private final int rowsNumber = 10;
@@ -21,6 +21,9 @@ public class Board extends Parent {
     private boolean playerBoard;
     private VBox rows = new VBox();
 
+    public int getShipCount() {
+        return shipCount;
+    }
 
     public Board(EventHandler<? super MouseEvent> handler, boolean playerBoard) {
         this.playerBoard = playerBoard;
@@ -63,6 +66,23 @@ public class Board extends Parent {
 return true;
     }
 
+    public void setShipsRandomly (Battleship randomlyPlacedShip) {
+        boolean shipPlaced;
+        Random random = new Random();
+
+        do {
+            int row = random.nextInt(rowsNumber);
+            int column = random.nextInt(columnsNumber);
+            Cell first = new Cell(row, column);
+
+            if (random.nextBoolean()) {
+                randomlyPlacedShip.rotate();
+            }
+
+            shipPlaced = setShip(randomlyPlacedShip, first);
+        } while (!shipPlaced);
+    }
+
     public boolean canSetShip(Battleship ship, Cell firstCell) {
         int shipSize = ship.getShipSize();
 
@@ -94,7 +114,7 @@ return true;
             return true;
         }
 
-        private Cell[] getNeighbors (int column, int row) {
+    private Cell[] getNeighbors (int column, int row) {
             Point2D[] points = new Point2D[] {
                     new Point2D(column - 1, row),
                     new Point2D(column + 1, row),
@@ -120,19 +140,36 @@ return true;
         return x >= 0 && x < columnsNumber && y >= 0 && y < rowsNumber;
     }
 
+    public boolean getShoot(Cell cell) {
+        if (!playerBoard) {
+            pass();
+        }
+        return cell.shoot();
+    }
+
+    private void pass() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public class Cell extends Rectangle {
         public int columns;
         public int rows;
         public Battleship ship;
-        private boolean wasAimed;
+        private boolean wasAimed = false;
         private Board board;
-        private boolean isEmpty;
+        private boolean isEmpty = true;
 
+        public boolean isEmpty() {
+            return isEmpty;
+        }
 
         public int getColumns() {
             return columns;
         }
-
 
         public int getRows() {
             return rows;
@@ -151,7 +188,7 @@ return true;
             setStroke(Color.GRAY);
         }
 
-        public boolean isWasAimed() {
+        public boolean wasAimed() {
             return wasAimed;
         }
 
@@ -171,5 +208,14 @@ return true;
             return false;
         }
 
+        private void setShip (Battleship ship) {
+            this.ship = ship;
+            isEmpty = false;
+            if (playerBoard) {
+                setFill(Color.DARKBLUE);
+            }
+        }
+
     }
+
 }

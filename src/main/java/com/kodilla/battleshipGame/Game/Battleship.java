@@ -67,4 +67,8 @@ public class Battleship {
     public boolean isNotSinked() {
         return hitpoints > 0;
     }
+
+    public void rotate(){
+        vertical = !vertical;
+    }
 }
