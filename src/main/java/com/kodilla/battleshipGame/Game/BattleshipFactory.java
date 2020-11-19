@@ -64,4 +64,7 @@ public class BattleshipFactory {
         getShips(Battleship.Masts.FOUR)}, 0, 4).sum();
     }
 
+    public Battleship getNextShip() {
+        return ships.pollFirst();
+    }
 }

@@ -20,18 +20,36 @@ public class Board extends Parent {
     public int shipCount;
     private boolean playerBoard;
     private VBox rows = new VBox();
+    private List<Cell> highlighted = new ArrayList<>();
 
     public int getShipCount() {
         return shipCount;
     }
 
-    public Board(EventHandler<? super MouseEvent> handler, boolean playerBoard) {
+    public Board(EventHandler<? super MouseEvent> clickHandler, EventHandler<? super MouseEvent> mouseEnteredHandler,
+                 EventHandler<? super MouseEvent> mouseExitedHandler, boolean playerBoard) {
         this.playerBoard = playerBoard;
         for (int y = 0; y < rowsNumber; y++) {
             HBox row = new HBox();
             for (int x = 0; x < columnsNumber; x++) {
                 Cell cell = new Cell(x, y, this);
-                cell.setOnMouseClicked(handler);
+                cell.setOnMouseClicked(clickHandler);
+                cell.setOnMouseEntered(mouseEnteredHandler);
+                cell.setOnMouseExited(mouseExitedHandler);
+                row.getChildren().add(cell);
+            }
+            rows.getChildren().add(row);
+        }
+        getChildren().add(rows);
+    }
+
+    public Board(EventHandler<? super MouseEvent> clickHandler, boolean playerBoard) {
+        this.playerBoard = playerBoard;
+        for (int y = 0; y < rowsNumber; y++) {
+            HBox row = new HBox();
+            for (int x = 0; x < columnsNumber; x++) {
+                Cell cell = new Cell(x, y, this);
+                cell.setOnMouseClicked(clickHandler);
                 row.getChildren().add(cell);
             }
             rows.getChildren().add(row);
@@ -56,11 +74,13 @@ public class Board extends Parent {
         for (int i = y; i < y + shipSize; i++) {
             Cell occupied = getCell(x, i);
             occupied.ship = ship;
+            occupied.setFill(Color.GRAY);
         }
     } else {
         for (int i = x; i < x + shipSize; x++) {
             Cell occupied = getCell(i, y);
             occupied.ship = ship;
+            occupied.setFill(Color.GRAY);
         }
     }
 return true;
@@ -216,6 +236,43 @@ return true;
             }
         }
 
+        public void highlight() {
+            if (isEmpty()) {
+                setFill(Color.LIGHTYELLOW);
+            }
+        }
+
+        public void removeHighlight() {
+            if (isEmpty()) {
+                setFill(Color.AQUAMARINE);
+            }
+        }
+    }
+
+    public void highlightCellsToSetShipOn (Battleship ship, Cell firstCell) {
+        if (ship == null || !canSetShip(ship, firstCell)) {
+            return;
+        }
+
+        int shipSize = ship.getShipSize();
+
+        for (int i = 0; i < shipSize; i++) {
+            if (ship.isVertical()) {
+                Cell occupied = getCell(firstCell.getRows() + i, firstCell.getColumns());
+                occupied.highlight();
+                highlighted.add(occupied);
+            } else {
+                Cell occupied = getCell(firstCell.getRows(), firstCell.getColumns() + i);
+                occupied.highlight();
+                highlighted.add(occupied);
+            }
+        }
+    }
+
+    public void removeHighlightFromCellsToSetSHipOn () {
+        for (Cell cell : highlighted) {
+            cell.removeHighlight();
+        }
     }
 
 }

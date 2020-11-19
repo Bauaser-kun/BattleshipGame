@@ -1,6 +1,8 @@
 package com.kodilla.battleshipGame.Game;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -8,10 +10,10 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class Game extends Application {
-    private Image imageback = new Image("file:src/main/resources/waterBackground.jpg");
+    private final Image imageback = new Image("file:src/main/resources/waterBackground.jpg");
 
-    private int turnCount = 0;
-    private Label turnCounter = new Label("Turn: " + turnCount);
+    private final int turnCount = 0;
+    private final Label turnCounter = new Label("Turn: " + turnCount);
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -22,13 +24,13 @@ public class Game extends Application {
                 BackgroundPosition.CENTER, backgroundSize);
         Background background = new Background(backgroundImage);
 
-        GridPane grid = new GridPane();
-        grid.add(turnCounter, 1, 1, 5, 5);
-        grid.setBackground(background);
-        Scene scene = new Scene(grid, 750, 750);
+        Parent root = FXMLLoader.load(getClass().getResource("gamePane.fxml"));
 
-        primaryStage.setTitle("Game of Ships");
+        Scene scene = new Scene(root);
+
+        primaryStage.setTitle("Battleship");
         primaryStage.setScene(scene);
+        primaryStage.setResizable(true);
         primaryStage.show();
     }
 
