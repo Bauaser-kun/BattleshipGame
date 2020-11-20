@@ -35,9 +35,9 @@ private Label gameResult;
         gameRunning = false;
         enemyTurn = false;
         currentPlayerShip = battleshipFactory.getNextShip();
-        playerBoard = new Board(playerBoardClickHandler(battleshipFactory), playerBoardMouseEnteredHandler(),
-                playerBoardMouseExitedHandler(), true);
-        enemyBoard = new Board(enemyBoardClikHandler(), false);
+        playerBoard = new Board(true, playerBoardClickHandler(battleshipFactory), playerBoardMouseEnteredHandler(),
+                playerBoardMouseExitedHandler());
+        enemyBoard = new Board(false, enemyBoardClikHandler());
         enemyBoardArea.getChildren().add(enemyBoard);
         playerBoardArea.getChildren().add(playerBoard);
     }

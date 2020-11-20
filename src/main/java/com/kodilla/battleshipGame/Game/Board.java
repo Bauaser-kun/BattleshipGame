@@ -26,8 +26,8 @@ public class Board extends Parent {
         return shipCount;
     }
 
-    public Board(EventHandler<? super MouseEvent> clickHandler, EventHandler<? super MouseEvent> mouseEnteredHandler,
-                 EventHandler<? super MouseEvent> mouseExitedHandler, boolean playerBoard) {
+    public Board(boolean playerBoard, EventHandler<? super MouseEvent> clickHandler, EventHandler<? super MouseEvent> mouseEnteredHandler,
+                 EventHandler<? super MouseEvent> mouseExitedHandler) {
         this.playerBoard = playerBoard;
         for (int y = 0; y < rowsNumber; y++) {
             HBox row = new HBox();
@@ -43,7 +43,7 @@ public class Board extends Parent {
         getChildren().add(rows);
     }
 
-    public Board(EventHandler<? super MouseEvent> clickHandler, boolean playerBoard) {
+    public Board(boolean playerBoard, EventHandler<? super MouseEvent> clickHandler) {
         this.playerBoard = playerBoard;
         for (int y = 0; y < rowsNumber; y++) {
             HBox row = new HBox();
