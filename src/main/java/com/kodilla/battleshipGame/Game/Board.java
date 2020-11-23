@@ -74,19 +74,23 @@ public class Board extends Parent {
         for (int i = y; i < y + shipSize; i++) {
             Cell occupied = getCell(x, i);
             occupied.ship = ship;
-            occupied.setFill(Color.GRAY);
+           if (playerBoard) {
+               occupied.setFill(Color.GRAY);
+           }
         }
     } else {
         for (int i = x; i < x + shipSize; x++) {
             Cell occupied = getCell(i, y);
             occupied.ship = ship;
-            occupied.setFill(Color.GRAY);
+            if (playerBoard) {
+                occupied.setFill(Color.GRAY);
+            }
         }
     }
 return true;
     }
 
-    public void setShipsRandomly (Battleship randomlyPlacedShip) {
+    public void setShipsRandomly (Battleship randomlyPlacedShip, Board board) {
         boolean shipPlaced;
         Random random = new Random();
 

@@ -165,7 +165,7 @@ private Label gameResult;
 
         for (Battleship ship = battleshipFactory.getNextShip(); ship != null;
              ship = battleshipFactory.getNextShip()) {
-            board.setShipsRandomly(ship);
+            board.setShipsRandomly(ship, board);
         }
     }
 }

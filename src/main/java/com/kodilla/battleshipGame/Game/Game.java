@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
@@ -26,7 +27,7 @@ public class Game extends Application {
     private int totalShips;
     private final Image imageback = new Image("file:src/main/resources/waterBackground.jpg");
 
-    private final int turnCount = 0;
+    private int turnCount = 0;
     private final Label turnCounter = new Label("Turn: " + turnCount);
     private Label gameResult;
 
@@ -43,6 +44,33 @@ public class Game extends Application {
         BorderPane pane = new BorderPane();
         pane.setBackground(background);
         pane.setPrefSize(800, 640);
+
+        Button rotateBtn = new Button("Rotate Ship");
+        rotateBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                rotateShip();
+            }
+        });
+        Button newGameBtn = new Button("Start new game");
+        newGameBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                startGame();
+            }
+        });
+        Button exitBtn = new Button("Exit game");
+        exitBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                exitGame();
+            }
+        });
+        FlowPane bottomButtons = new FlowPane();
+        bottomButtons.getChildren().addAll(newGameBtn, exitBtn, rotateBtn);
+
+        pane.setTop(turnCounter);
+        pane.setBottom(bottomButtons);
 
         pane.setRight(new Text("checking if this works"));
         enemyBoard = new Board(false, enemyBoardClikHandler());
@@ -69,7 +97,7 @@ public class Game extends Application {
                 }
             }
 
-            if (--totalShips == 0) {
+            if (currentPlayerShip == null) {
                 startGame();
             }
             });
@@ -92,11 +120,7 @@ public class Game extends Application {
         primaryStage.show();
     }
 
-    private void initializeNewGame() {
-
-    }
-
-   /* private EventHandler<MouseEvent> playerBoardMouseExitedHandler() {
+   public EventHandler<MouseEvent> playerBoardMouseExitedHandler() {
         return event -> {
             if (gameRunning) {
                 return;
@@ -105,7 +129,7 @@ public class Game extends Application {
         };
     }
 
-    private EventHandler< MouseEvent> playerBoardMouseEnteredHandler() {
+    public EventHandler< MouseEvent> playerBoardMouseEnteredHandler() {
         return event -> {
             if (gameRunning) {
                 return;
@@ -115,7 +139,7 @@ public class Game extends Application {
         };
     }
 
-    private EventHandler<MouseEvent> playerBoardClickHandler(BattleshipFactory battleshipFactory) {
+    public EventHandler<MouseEvent> playerBoardClickHandler(BattleshipFactory battleshipFactory) {
         return event -> {
             if (gameRunning) {
                 return;
@@ -139,7 +163,6 @@ public class Game extends Application {
             }
         };
     }
-*/
 
     private EventHandler<MouseEvent> enemyBoardClikHandler() {
         return event -> {
@@ -182,12 +205,7 @@ public class Game extends Application {
                 gameResult.setText("All your ships were sinked. You lost!");
             }
         } while (!cell.wasAimed() || enemyTurn);
-    }
-
-    private void startNewGame() {
-        enemyBoardArea.getChildren().remove(enemyBoard);
-        playerBoardArea.getChildren().remove(playerBoard);
-        initializeNewGame();
+        turnCount++;
     }
 
     private void rotateShip() {
@@ -206,6 +224,7 @@ public class Game extends Application {
     private void startGame() {
         setShipsRandomly(enemyBoard);
         gameRunning = true;
+        turnCount = 0;
     }
 
     private void exitGame() {
@@ -217,7 +236,7 @@ public class Game extends Application {
 
         for (Battleship ship = battleshipFactory.getNextShip(); ship != null;
              ship = battleshipFactory.getNextShip()) {
-            board.setShipsRandomly(ship);
+            board.setShipsRandomly(ship, board);
         }
     }
 
