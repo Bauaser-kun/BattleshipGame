@@ -38,34 +38,30 @@ public class Game extends Application {
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER, backgroundSize);
         Background background = new Background(backgroundImage);
+
         BattleshipFactory battleshipFactory = new BattleshipFactory();
         totalShips = battleshipFactory.getTotalShipsQuantity();
+        currentPlayerShip = battleshipFactory.getNextShip();
 
         BorderPane pane = new BorderPane();
         pane.setBackground(background);
         pane.setPrefSize(800, 640);
 
         Button rotateBtn = new Button("Rotate Ship");
-        rotateBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                rotateShip();
-            }
+        rotateBtn.setOnAction(event -> {
+            rotateShip();
         });
+
         Button newGameBtn = new Button("Start new game");
-        newGameBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                startGame();
-            }
+        newGameBtn.setOnAction(event -> {
+            startGame();
         });
+
         Button exitBtn = new Button("Exit game");
-        exitBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                exitGame();
-            }
+        exitBtn.setOnAction(event -> {
+            exitGame();
         });
+
         FlowPane bottomButtons = new FlowPane();
         bottomButtons.getChildren().addAll(newGameBtn, exitBtn, rotateBtn);
 
@@ -74,7 +70,6 @@ public class Game extends Application {
 
         pane.setRight(new Text("checking if this works"));
         enemyBoard = new Board(false, enemyBoardClikHandler());
-        setShipsRandomly(enemyBoard);
 
         playerBoard = new Board(true, event -> {
 
@@ -84,23 +79,19 @@ public class Game extends Application {
 
             Board.Cell currentCell = (Board.Cell) event.getSource();
 
-            if (event.getButton() == MouseButton.SECONDARY) {
-                currentPlayerShip.rotate();
-                return;
-            }
-
-            if (event.getButton() == MouseButton.PRIMARY) {
                 boolean shipSetProperly = playerBoard.setShip(currentPlayerShip, currentCell);
                 if (shipSetProperly) {
                     playerBoard.setShip(currentPlayerShip, currentCell);
                     currentPlayerShip = battleshipFactory.getNextShip();
                 }
-            }
+
 
             if (currentPlayerShip == null) {
                 startGame();
             }
             });
+
+        setShipsRandomly(enemyBoard);
 
         VBox boards = new VBox(25, enemyBoard, playerBoard);
         boards.setAlignment(Pos.CENTER);

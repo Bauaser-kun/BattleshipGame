@@ -63,31 +63,33 @@ public class Board extends Parent {
 
     public boolean setShip (Battleship ship, Cell firstCell) {
         int shipSize = ship.getShipSize();
-        int x = (int)firstCell.getColumns();
-        int y = (int)firstCell.getRows();
+        int x = (int) firstCell.getColumns();
+        int y = (int) firstCell.getRows();
 
-        if (!canSetShip(ship, firstCell)) {
-            return false;
-        }
+        if (canSetShip(ship, firstCell)) {
 
-    if (ship.vertical) {
-        for (int i = y; i < y + shipSize; i++) {
-            Cell occupied = getCell(x, i);
-            occupied.ship = ship;
-           if (playerBoard) {
-               occupied.setFill(Color.GRAY);
-           }
-        }
-    } else {
-        for (int i = x; i < x + shipSize; x++) {
-            Cell occupied = getCell(i, y);
-            occupied.ship = ship;
-            if (playerBoard) {
-                occupied.setFill(Color.GRAY);
+            if (ship.vertical) {
+                for (int i = y; i < y + shipSize; i++) {
+                    Cell occupied = getCell(x, i);
+                    occupied.ship = ship;
+                    if (playerBoard) {
+                        occupied.setFill(Color.GRAY);
+                        occupied.setStroke(Color.WHITE);
+                    }
+                }
+            } else {
+                for (int i = x; i < x + shipSize; x++) {
+                    Cell occupied = getCell(i, y);
+                    occupied.ship = ship;
+                    if (playerBoard) {
+                        occupied.setFill(Color.GRAY);
+                        occupied.setStroke(Color.WHITE);
+                    }
+                }
             }
+            return true;
         }
-    }
-return true;
+        return false;
     }
 
     public void setShipsRandomly (Battleship randomlyPlacedShip, Board board) {
@@ -109,32 +111,45 @@ return true;
 
     public boolean canSetShip(Battleship ship, Cell firstCell) {
         int shipSize = ship.getShipSize();
+        int x = firstCell.getRows();
+        int y = firstCell.getColumns();
 
-        for (int i = 0; i < shipSize; i++) {
-            if (!isValidCoordinate(firstCell.getColumns() + i, firstCell.getRows() + i)) {
-                return false;
-            }
-        }
 
-            for  (int i = 0; i < shipSize; i++) {
-                if (ship.isVertical()) {
-                    Cell currentCell = getCell(firstCell.getColumns(), firstCell.getRows() + i);
-                    if (currentCell.ship != null) {
-                        return false;
+                if (ship.vertical) {
+                    for (int i = y; i < y + shipSize; i++) {
+                        if (!isValidCoordinate(x, i))
+                            return false;
+
+                        Cell currentCell = getCell(x, i);
+                        if (currentCell.ship != null)
+                            return false;
+
+                        for (Cell neighbour : getNeighbors(x, i)) {
+                            if (!isValidCoordinate(x, i))
+                                return false;
+
+                            if (neighbour.ship != null)
+                                return false;
+                        }
                     }
                 } else {
-                    Cell currentCell = getCell((firstCell.getColumns() + i), firstCell.getRows());
-                    if (currentCell.ship != null) {
-                        return false;
+                    for (int i = x; i < x + shipSize; i++) {
+                        if (!isValidCoordinate(i, y))
+                            return false;
+
+                        Cell currentCell = getCell(i, y);
+                        if (currentCell.ship != null)
+                            return false;
+
+                        for (Cell neighbour : getNeighbors(i, y)) {
+                            if (!isValidCoordinate(i, y))
+                                return false;
+
+                            if (neighbour.ship != null)
+                                return false;
+                        }
                     }
                 }
-            }
-
-            for (Cell neighbor : getNeighbors(firstCell.getColumns(), firstCell.getRows())) {
-                if (neighbor.ship != null) {
-                    return false;
-                }
-            }
             return true;
         }
 
@@ -230,14 +245,6 @@ return true;
                 return true;
             }
             return false;
-        }
-
-        private void setShip (Battleship ship) {
-            this.ship = ship;
-            isEmpty = false;
-            if (playerBoard) {
-                setFill(Color.DARKBLUE);
-            }
         }
 
         public void highlight() {

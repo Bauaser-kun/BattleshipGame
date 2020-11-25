@@ -1,6 +1,13 @@
 package com.kodilla.battleshipGame.Game;
 
-public class Battleship {
+import javafx.scene.Parent;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+
+import java.awt.*;
+
+public class Battleship extends Parent {
 
     enum Ship {
         ONE_MAST_SHIP(ONE_MAST_SHIP_SIZE), TWO_MAST_SHIP(TWO_MAST_SHIP_SIZE),
@@ -40,6 +47,16 @@ public class Battleship {
         this.hitpoints = ship.getSize();
         this.shipName = ship.name();
         this.vertical = vertical;
+
+        VBox vBox = new VBox();
+        for (int i = 0; i < shipSize; i ++) {
+            Rectangle square = new Rectangle(20, 20);
+            square.setFill(null);
+            square.setStroke(Color.WHITE);
+            vBox.getChildren().add(square);
+        }
+        getChildren().add(vBox);
+
     }
 
     public int getShipSize() {
