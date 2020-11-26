@@ -56,6 +56,7 @@ public class BattleshipFactory {
         }
     }
 
+
     static int getTotalShipsQuantity() {
         return Arrays.stream(new int[]{
                 getShips(Battleship.Masts.ONE),

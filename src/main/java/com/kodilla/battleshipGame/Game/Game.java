@@ -199,6 +199,7 @@ public class Game extends Application {
         turnCount++;
     }
 
+
     private void rotateShip() {
         if (!gameRunning) {
             currentPlayerShip.rotate();

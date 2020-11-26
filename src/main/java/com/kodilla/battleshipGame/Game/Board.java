@@ -280,6 +280,7 @@ public class Board extends Parent {
         }
     }
 
+
     public void removeHighlightFromCellsToSetSHipOn () {
         for (Cell cell : highlighted) {
             cell.removeHighlight();

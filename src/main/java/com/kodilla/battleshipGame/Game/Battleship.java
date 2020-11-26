@@ -24,6 +24,7 @@ public class Battleship extends Parent {
         }
     }
 
+
     enum Masts {
         ONE,
         TWO,
